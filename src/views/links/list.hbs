@@ -1,0 +1,25 @@
+<div class="container p-4">
+    <div class="row">
+        {{#each links}} <!--Inicio del ciclo each-->
+            <div class="col-md-3 m-2">
+                <div class="card" style="width: 18rem;">
+                    <img src="{{url}}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <a href="{{url}}"><h5 class="card-title">{{title}}</h5></a>
+                        <p class="card-text">{{description}}</p>
+                        <p>Publicado: {{timeago created_at}}</p>
+                        <a href="/links/delete/{{id}}" class="btn btn-danger">Borrar</a>
+                        <a href="/links/edit/{{id}}" class="btn btn-secondary">Editar</a>
+                    </div>
+                </div>
+            </div>
+            {{else}} <!--Si no hay ningun link en la base de datos se muestra lo siguiente-->
+                <div class="col-md-4 mx-auto">
+                    <div class="card card-body text-center">
+                        <p>No hay links guardados todavia</p>
+                        <a href="/links/add">Agregar uno</a>
+                    </div>
+                </div>
+        {{/each}} <!--Fin del ciclo each-->
+    </div>
+</div>

@@ -25,22 +25,7 @@
     <body>
         {{> navigation}}
 
-        <!--Comprobamos si existe success-->
-        {{#if success}}
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-4 mx-auto">
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            {{success}}
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {{/if}}
-
+        {{> message}}
 
         {{{ body }}} <!--Aqui cargamos los hbs de los handlebars-->        
 

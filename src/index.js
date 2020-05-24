@@ -49,6 +49,7 @@ app.use((req, res, next) => {
 });
 app.use((req, res, next) => {
     app.locals.success = req.flash('success');
+    app.locals.success = req.flash('message');
     next();
 });//usamos el flash al que nombramos success
 

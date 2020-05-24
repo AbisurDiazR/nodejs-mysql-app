@@ -50,6 +50,8 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
     app.locals.success = req.flash('success');
     app.locals.success = req.flash('message');
+    //almacenamos en una variable local el nombre del usuario que ya tenemos serializado
+    app.locals.user = req.user;
     next();
 });//usamos el flash al que nombramos success
 

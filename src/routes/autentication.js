@@ -3,6 +3,8 @@ const router = express.Router();
 
 //importamos la constante passport desde nuestro lib
 const passport = require('passport');
+//importamos el metodos isLoggedIn para validar la sesion
+const { isLoggedIn } = require('../lib/auth');
 
 //ruta get para el signup
 router.get('/signup',(req, res) => {
@@ -30,8 +32,17 @@ router.post('/signin',(req,res, next) => {
     })(req, res, next);
 });
 
-router.get('/profile', (req, res) => {
-    res.send('This profile');
+//ruta get para el profile
+router.get('/profile', isLoggedIn, (req, res) => {//isLoggedIn protege la ruta profile y cualquier ruta que necesitemos
+    res.render('profiles');//renderizamos la vista profiles
+});
+
+//ruta get para cerrar sesión
+router.get('/logout', (req, res) => {
+    //borramos la sesion del usuario
+    req.logOut();
+    //redireccionamos al usuario a signin
+    res.redirect('/signin');
 });
 
 module.exports = router;

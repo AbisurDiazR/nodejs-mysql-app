@@ -1,20 +1,23 @@
 const express = require('express');
 const router = express.Router();
 
-const pool = require('../database');//exportamos el archivo database.js
+const pool = require('../database');//importamos el archivo database.js
+//importamos el metodo isLoggedIn desde el archivi auth
+const { isLoggedIn } = require('../lib/auth');
 
 //creamos una ruta para una peticion get
-router.get('/add',(req, res) => {
+router.get('/add',isLoggedIn,(req, res) => {
     res.render('links/add');
 });
 
-router.post('/add',async (req, res) => {
+router.post('/add',isLoggedIn,async (req, res) => {
     const { title, url, description } = req.body;
     //Creamos un objeto de nuevo link
     const newLink = {
         title,
         url,
-        description
+        description,
+        user_id: req.user.id //guardamos el id del usuario logeado
     };
     //Hacemos una insersion en la base de datos usando una funcion asyncrona
     await pool.query('INSERT INTO links set ?',[newLink]);
@@ -26,19 +29,19 @@ router.post('/add',async (req, res) => {
     res.redirect('/links');
 });
 
-router.get('/',async (req, res) => {
-    const links = await pool.query('SELECT * FROM links');//esta consulta la pasaremos al render de abajo
+router.get('/',isLoggedIn,async (req, res) => {
+    const links = await pool.query('SELECT * FROM links WHERE user_id = ?',[req.user.id]);//esta consulta la pasaremos al render de abajo
     res.render('links/list', {links});//renderisamos el archivo list en la carpeta links
 });
 
-router.get('/delete/:id', async (req, res) => {
+router.get('/delete/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params; //obtenemos el id de los parametros del request
     await pool.query('DELETE FROM links WHERE id = ?',[id]); //pasamos el id al query
     req.flash('success','Imagen borrada');
     res.redirect('/links');
 });
 
-router.get('/edit/:id', async (req, res) => {
+router.get('/edit/:id', isLoggedIn, async (req, res) => {
     const { id } = req.params;
     const links = await pool.query('SELECT * FROM links WHERE id=?',[id]);//hacemos una consulta query con el id obenido de req.params
     console.log(links[0]);
@@ -47,7 +50,7 @@ router.get('/edit/:id', async (req, res) => {
 });
 
 //ruta post para actualizar el link
-router.post('/edit/:id',async (req, res) => {
+router.post('/edit/:id',isLoggedIn,async (req, res) => {
     const { id } = req.params;
     const { title, description, url } = req.body; //datos nuevos del formulario
     const newLink = { //guardamos los datos nuevos en un objeto
